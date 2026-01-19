@@ -7,14 +7,41 @@
       <p>Stage: <strong>{{ currentStage }} / {{ totalStages }}</strong></p>
     </div>
 
-    <div class="challenge-area">
-      <p class="challenge-text">Challenge content will be implemented in the next step</p>
+    <div class="challenge-area" *ngIf="currentChallenge">
+      <h3 class="challenge-question">{{ currentChallenge.question }}</h3>
+      
+      <div class="image-grid">
+        <div 
+          *ngFor="let image of currentChallenge.images"
+          class="image-item"
+          [class.selected]="isImageSelected(image.id)"
+          (click)="toggleImageSelection(image.id)"
+        >
+          <div class="image-emoji">{{ image.emoji }}</div>
+          <div class="image-label">{{ image.label }}</div>
+          <div class="selection-indicator" *ngIf="isImageSelected(image.id)">✓</div>
+        </div>
+      </div>
+
+      <div class="feedback-message" *ngIf="showFeedback">
+        <div class="feedback-correct" *ngIf="isCorrect">
+          ✓ Correct! Moving to next challenge...
+        </div>
+        <div class="feedback-incorrect" *ngIf="!isCorrect">
+          ✗ Incorrect. Please try again.
+          <button class="btn-retry" (click)="resetFeedback()">Retry</button>
+        </div>
+      </div>
+
+      <div class="submit-section" *ngIf="!showFeedback">
+        <p class="selection-count">Selected: {{ selectedImages.size }} image(s)</p>
+        <button class="btn-submit" (click)="submitAnswer()">Verify Selection</button>
+      </div>
     </div>
 
     <div class="navigation-buttons">
       <button class="btn-secondary" (click)="goBack()">Back to Home</button>
       <button *ngIf="canGoBack()" class="btn-secondary" (click)="previousStage()">Previous Stage</button>
-      <button class="btn-primary" (click)="nextChallenge()">Next Challenge</button>
     </div>
   </div>
 </div>

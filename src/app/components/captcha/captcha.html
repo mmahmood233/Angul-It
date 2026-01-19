@@ -13,6 +13,7 @@
 
     <div class="navigation-buttons">
       <button class="btn-secondary" (click)="goBack()">Back to Home</button>
+      <button *ngIf="canGoBack()" class="btn-secondary" (click)="previousStage()">Previous Stage</button>
       <button class="btn-primary" (click)="nextChallenge()">Next Challenge</button>
     </div>
   </div>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CaptchaState } from '../../services/captcha-state';
 
 @Component({
   selector: 'app-home',
@@ -8,9 +9,13 @@ import { Router } from '@angular/router';
   styleUrl: './home.css',
 })
 export class Home {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private captchaState: CaptchaState
+  ) {}
 
   startCaptcha(): void {
+    this.captchaState.startNewChallenge();
     this.router.navigate(['/captcha']);
   }
 }

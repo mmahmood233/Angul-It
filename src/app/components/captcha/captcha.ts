@@ -1,13 +1,14 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Subscription, timer } from 'rxjs';
 import { CaptchaState, CaptchaProgress } from '../../services/captcha-state';
 import { Challenge, ChallengeData, ImageItem } from '../../services/challenge';
 
 @Component({
   selector: 'app-captcha',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './captcha.html',
   styleUrl: './captcha.css',
 })
@@ -16,6 +17,7 @@ export class Captcha implements OnInit, OnDestroy {
   totalStages = 3;
   currentChallenge?: ChallengeData;
   selectedImages: Set<string> = new Set();
+  userInput: string = '';
   showFeedback = false;
   isCorrect = false;
   private progressSubscription?: Subscription;
@@ -43,6 +45,7 @@ export class Captcha implements OnInit, OnDestroy {
   private loadChallenge(): void {
     this.currentChallenge = this.challengeService.getChallengeByStage(this.currentStage);
     this.selectedImages.clear();
+    this.userInput = '';
     this.showFeedback = false;
     this.isCorrect = false;
   }
@@ -60,17 +63,28 @@ export class Captcha implements OnInit, OnDestroy {
   }
 
   submitAnswer(): void {
-    if (this.selectedImages.size === 0) {
-      alert('Please select at least one image.');
-      return;
+    let answerArray: string[];
+
+    if (this.currentChallenge?.type === 'select-multiple') {
+      if (this.selectedImages.size === 0) {
+        alert('Please select at least one image.');
+        return;
+      }
+      answerArray = Array.from(this.selectedImages);
+    } else {
+      const answer = String(this.userInput).trim();
+      if (!answer) {
+        alert('Please provide an answer.');
+        return;
+      }
+      answerArray = [answer];
     }
 
-    const selectedArray = Array.from(this.selectedImages);
-    this.isCorrect = this.challengeService.validateAnswer(this.currentStage, selectedArray);
+    this.isCorrect = this.challengeService.validateAnswer(this.currentStage, answerArray);
     
     this.captchaState.submitChallengeResult(
       this.currentStage,
-      selectedArray,
+      answerArray,
       this.isCorrect
     );
 
@@ -117,5 +131,6 @@ export class Captcha implements OnInit, OnDestroy {
   resetFeedback(): void {
     this.showFeedback = false;
     this.selectedImages.clear();
+    this.userInput = '';
   }
 }

@@ -9,9 +9,11 @@ export interface ImageItem {
 export interface ChallengeData {
   stage: number;
   question: string;
-  images: ImageItem[];
+  images?: ImageItem[];
   correctAnswers: string[];
-  type: 'select-multiple' | 'select-single';
+  type: 'select-multiple' | 'math' | 'text-input';
+  mathProblem?: string;
+  textPrompt?: string;
 }
 
 @Injectable({
@@ -38,37 +40,17 @@ export class Challenge {
     },
     {
       stage: 2,
-      question: 'Select all images containing VEHICLES',
-      type: 'select-multiple',
-      images: [
-        { id: '1', emoji: '🚗', label: 'Car' },
-        { id: '2', emoji: '🍎', label: 'Apple' },
-        { id: '3', emoji: '✈️', label: 'Plane' },
-        { id: '4', emoji: '🌸', label: 'Flower' },
-        { id: '5', emoji: '🚲', label: 'Bike' },
-        { id: '6', emoji: '📱', label: 'Phone' },
-        { id: '7', emoji: '🚢', label: 'Ship' },
-        { id: '8', emoji: '🎨', label: 'Art' },
-        { id: '9', emoji: '🚁', label: 'Helicopter' },
-      ],
-      correctAnswers: ['1', '3', '5', '7', '9'],
+      question: 'Solve the math problem',
+      type: 'math',
+      mathProblem: 'What is 7 + 5?',
+      correctAnswers: ['12'],
     },
     {
       stage: 3,
-      question: 'Select all images containing FOOD',
-      type: 'select-multiple',
-      images: [
-        { id: '1', emoji: '🍕', label: 'Pizza' },
-        { id: '2', emoji: '⚽', label: 'Ball' },
-        { id: '3', emoji: '🍔', label: 'Burger' },
-        { id: '4', emoji: '💻', label: 'Laptop' },
-        { id: '5', emoji: '🍎', label: 'Apple' },
-        { id: '6', emoji: '🎮', label: 'Game' },
-        { id: '7', emoji: '🍰', label: 'Cake' },
-        { id: '8', emoji: '📚', label: 'Books' },
-        { id: '9', emoji: '🍦', label: 'Ice Cream' },
-      ],
-      correctAnswers: ['1', '3', '5', '7', '9'],
+      question: 'Type the word shown below',
+      type: 'text-input',
+      textPrompt: 'HUMAN',
+      correctAnswers: ['HUMAN', 'human'],
     },
   ];
 
@@ -80,6 +62,12 @@ export class Challenge {
     const challenge = this.getChallengeByStage(stage);
     if (!challenge) return false;
 
+    // For text/math challenges with single answer
+    if (challenge.type === 'math' || challenge.type === 'text-input') {
+      return selectedIds.length === 1 && challenge.correctAnswers.includes(selectedIds[0]);
+    }
+
+    // For multi-select image challenges
     const sortedSelected = [...selectedIds].sort();
     const sortedCorrect = [...challenge.correctAnswers].sort();
 

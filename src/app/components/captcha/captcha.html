@@ -10,7 +10,8 @@
     <div class="challenge-area" *ngIf="currentChallenge">
       <h3 class="challenge-question">{{ currentChallenge.question }}</h3>
       
-      <div class="image-grid">
+      <!-- Image Selection Challenge -->
+      <div *ngIf="currentChallenge.type === 'select-multiple'" class="image-grid">
         <div 
           *ngFor="let image of currentChallenge.images"
           class="image-item"
@@ -21,6 +22,30 @@
           <div class="image-label">{{ image.label }}</div>
           <div class="selection-indicator" *ngIf="isImageSelected(image.id)">✓</div>
         </div>
+      </div>
+
+      <!-- Math Challenge -->
+      <div *ngIf="currentChallenge.type === 'math'" class="math-challenge">
+        <div class="math-problem">{{ currentChallenge.mathProblem }}</div>
+        <input 
+          type="number" 
+          [(ngModel)]="userInput" 
+          placeholder="Enter your answer"
+          class="math-input"
+          (keyup.enter)="submitAnswer()"
+        />
+      </div>
+
+      <!-- Text Input Challenge -->
+      <div *ngIf="currentChallenge.type === 'text-input'" class="text-challenge">
+        <div class="text-prompt">{{ currentChallenge.textPrompt }}</div>
+        <input 
+          type="text" 
+          [(ngModel)]="userInput" 
+          placeholder="Type the word above"
+          class="text-input"
+          (keyup.enter)="submitAnswer()"
+        />
       </div>
 
       <div class="feedback-message" *ngIf="showFeedback">
@@ -34,8 +59,12 @@
       </div>
 
       <div class="submit-section" *ngIf="!showFeedback">
-        <p class="selection-count">Selected: {{ selectedImages.size }} image(s)</p>
-        <button class="btn-submit" (click)="submitAnswer()">Verify Selection</button>
+        <p class="selection-count" *ngIf="currentChallenge.type === 'select-multiple'">
+          Selected: {{ selectedImages.size }} image(s)
+        </p>
+        <button class="btn-submit" (click)="submitAnswer()">
+          {{ currentChallenge.type === 'select-multiple' ? 'Verify Selection' : 'Submit Answer' }}
+        </button>
       </div>
     </div>
 

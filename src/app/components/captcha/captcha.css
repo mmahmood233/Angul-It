@@ -204,6 +204,49 @@ h2 {
   }
 }
 
+.math-challenge,
+.text-challenge {
+  text-align: center;
+  padding: 2rem;
+}
+
+.math-problem,
+.text-prompt {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  border: 3px solid #f093fb;
+}
+
+.math-input,
+.text-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+  border: 3px solid #e0e0e0;
+  border-radius: 10px;
+  text-align: center;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+}
+
+.math-input:focus,
+.text-input:focus {
+  outline: none;
+  border-color: #f093fb;
+  box-shadow: 0 0 0 3px rgba(240, 147, 251, 0.1);
+}
+
+.text-input {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
 @media (max-width: 768px) {
   .image-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -211,6 +254,16 @@ h2 {
   
   .image-emoji {
     font-size: 2.5rem;
+  }
+
+  .math-problem,
+  .text-prompt {
+    font-size: 1.5rem;
+  }
+
+  .math-input,
+  .text-input {
+    font-size: 1rem;
   }
 }
 

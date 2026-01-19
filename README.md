@@ -1,59 +1,144 @@
-# AngulItApp
+# Angul-It - Multi-Stage Captcha Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+A modern, interactive captcha verification system built with Angular 21. Users prove they're human by completing three image recognition challenges with persistent progress tracking.
 
-## Development server
+## Features
 
-To start a local development server, run:
+### Core Functionality
+- **Multi-Stage Challenges**: Three progressive captcha stages with different themes
+- **Image Recognition**: Select correct images from a 3x3 grid
+- **State Management**: Progress persists across page refreshes using localStorage
+- **Route Protection**: Navigation guards prevent unauthorized access to results
+- **Responsive Design**: Mobile-friendly layout with adaptive grid
 
-```bash
-ng serve
+### Challenge Types
+1. **Stage 1**: Select all ANIMALS (🐕🐈🦁🐘🐦)
+2. **Stage 2**: Select all VEHICLES (🚗✈️🚲🚢🚁)
+3. **Stage 3**: Select all FOOD (🍕🍔🍎🍰🍦)
+
+### Technical Highlights
+- Angular 21.1.0 (latest version)
+- RxJS for reactive state management
+- TypeScript for type safety
+- SSR (Server-Side Rendering) compatible
+- Modern CSS with gradients and animations
+
+## Project Structure
+
+```
+src/app/
+├── components/
+│   ├── home/          # Welcome page
+│   ├── captcha/       # Challenge interface
+│   └── result/        # Completion page
+├── services/
+│   ├── captcha-state.ts   # State management
+│   └── challenge.ts       # Challenge data & validation
+├── guards/
+│   └── completion-guard.ts # Route protection
+└── app.routes.ts      # Routing configuration
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Getting Started
 
-## Code scaffolding
+### Prerequisites
+- Node.js (v20 or higher)
+- npm (v11 or higher)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Installation
 
+1. Clone the repository
 ```bash
-ng generate component component-name
+git clone <repository-url>
+cd Angul-It
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+2. Install dependencies
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
-
-To build the project run:
-
+3. Start development server
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+4. Open browser to `http://localhost:4200`
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Available Commands
 
 ```bash
-ng test
+npm start          # Start development server
+npm run build      # Build for production
+npm test           # Run tests
 ```
 
-## Running end-to-end tests
+## How It Works
 
-For end-to-end (e2e) testing, run:
+### User Flow
+1. **Home Page**: User clicks "Start Captcha Challenge"
+2. **Challenge Page**: Complete 3 stages by selecting correct images
+3. **Validation**: Instant feedback on correct/incorrect selections
+4. **Result Page**: View completion summary with time taken
 
-```bash
-ng e2e
-```
+### State Persistence
+- Progress saved to localStorage automatically
+- Survives page refreshes
+- Tracks current stage, results, and timestamps
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Navigation Guards
+- Result page protected by `completionGuard`
+- Redirects to captcha if not completed
+- Ensures proper challenge flow
 
-## Additional Resources
+## Key Components
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### CaptchaState Service
+Manages application state with RxJS BehaviorSubject:
+- Track current stage and progress
+- Save/load from localStorage
+- Validate stage completion
+- Calculate completion time
+
+### Challenge Service
+Provides challenge data and validation:
+- 3 predefined challenges
+- Answer validation logic
+- Image data with emojis
+
+### Route Guard
+Protects result page from direct access:
+- Checks completion status
+- Redirects unauthorized users
+- Maintains security
+
+## Browser Compatibility
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## Technologies Used
+- **Angular 21.1.0**: Framework
+- **TypeScript 5.9.2**: Language
+- **RxJS 7.8.0**: Reactive programming
+- **CSS3**: Styling with gradients & animations
+
+## Development Notes
+
+### State Management
+Uses RxJS BehaviorSubject for reactive state updates. All components subscribe to state changes for real-time updates.
+
+### SSR Compatibility
+Platform checks ensure localStorage is only accessed in browser context, preventing SSR errors.
+
+### Form Validation
+- Minimum selection requirement
+- Exact match validation
+- Visual feedback on submission
+
+## License
+This project was created as a learning exercise.
+
+## Author
+Built with Angular CLI version 21.1.0

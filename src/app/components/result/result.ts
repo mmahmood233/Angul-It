@@ -20,12 +20,6 @@ export class Result implements OnInit {
 
   ngOnInit(): void {
     const progress = this.captchaState.getCurrentProgress();
-    
-    if (!progress.isCompleted) {
-      this.router.navigate(['/captcha']);
-      return;
-    }
-
     this.totalStages = progress.totalStages;
     this.completedStages = this.captchaState.getCompletedStagesCount();
     this.timeTaken = Math.floor((Date.now() - progress.startTime) / 1000);

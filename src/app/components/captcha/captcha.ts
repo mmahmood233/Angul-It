@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { CaptchaState, CaptchaProgress } from '../../services/captcha-state';
 import { Challenge, ChallengeData, ImageItem } from '../../services/challenge';
 
@@ -19,25 +19,25 @@ export class Captcha implements OnInit, OnDestroy {
   showFeedback = false;
   isCorrect = false;
   private progressSubscription?: Subscription;
+  private timerSubscription?: Subscription;
 
   constructor(
     private router: Router,
     private captchaState: CaptchaState,
-    private challengeService: Challenge
+    private challengeService: Challenge,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.progressSubscription = this.captchaState.progress$.subscribe(
-      (progress: CaptchaProgress) => {
-        this.currentStage = progress.currentStage;
-        this.totalStages = progress.totalStages;
-        this.loadChallenge();
-      }
-    );
+    const progress = this.captchaState.getCurrentProgress();
+    this.currentStage = progress.currentStage;
+    this.totalStages = progress.totalStages;
+    this.loadChallenge();
   }
 
   ngOnDestroy(): void {
     this.progressSubscription?.unsubscribe();
+    this.timerSubscription?.unsubscribe();
   }
 
   private loadChallenge(): void {
@@ -75,12 +75,15 @@ export class Captcha implements OnInit, OnDestroy {
     );
 
     this.showFeedback = true;
+    this.cdr.detectChanges();
 
     if (this.isCorrect) {
-      setTimeout(() => {
+      this.timerSubscription?.unsubscribe();
+      this.timerSubscription = timer(800).subscribe(() => {
         this.showFeedback = false;
         this.nextChallenge();
-      }, 1500);
+        this.cdr.detectChanges();
+      });
     }
   }
 
@@ -89,21 +92,21 @@ export class Captcha implements OnInit, OnDestroy {
   }
 
   previousStage(): void {
-    this.captchaState.moveToPreviousStage();
+    if (this.captchaState.moveToPreviousStage()) {
+      this.currentStage--;
+      this.loadChallenge();
+    }
   }
 
   nextChallenge(): void {
-    const canProceed = this.captchaState.canProceedToNextStage();
-    
-    if (!canProceed) {
-      return;
-    }
-
     const hasMoreStages = this.captchaState.moveToNextStage();
     
     if (!hasMoreStages) {
       this.captchaState.completeCaptcha();
       this.router.navigate(['/result']);
+    } else {
+      this.currentStage++;
+      this.loadChallenge();
     }
   }
 

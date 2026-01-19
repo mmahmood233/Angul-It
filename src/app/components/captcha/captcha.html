@@ -1,0 +1,19 @@
+<div class="captcha-container">
+  <div class="captcha-content">
+    <h2>Captcha Challenge</h2>
+    <p class="instruction">Complete the challenges below to prove you're human</p>
+    
+    <div class="challenge-info">
+      <p>Stage: <strong>{{ currentStage }} / {{ totalStages }}</strong></p>
+    </div>
+
+    <div class="challenge-area">
+      <p class="challenge-text">Challenge content will be implemented in the next step</p>
+    </div>
+
+    <div class="navigation-buttons">
+      <button class="btn-secondary" (click)="goBack()">Back to Home</button>
+      <button class="btn-primary" (click)="nextChallenge()">Next Challenge</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="result-container">
+  <div class="result-content">
+    <div class="success-icon">✓</div>
+    <h1>Congratulations!</h1>
+    <p class="success-message">You've successfully completed all captcha challenges</p>
+    
+    <div class="result-summary">
+      <h3>Challenge Summary</h3>
+      <p>Total Stages Completed: <strong>{{ totalStages }}</strong></p>
+      <p>Status: <strong class="status-success">Verified Human</strong></p>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn-primary" (click)="startNewChallenge()">Start New Challenge</button>
+      <button class="btn-secondary" (click)="goHome()">Back to Home</button>
+    </div>
+  </div>
+</div>

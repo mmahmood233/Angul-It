@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CaptchaState } from '../../services/captcha-state';
+import { Challenge } from '../../services/challenge';
 
 @Component({
   selector: 'app-result',
@@ -15,7 +16,8 @@ export class Result implements OnInit {
 
   constructor(
     private router: Router,
-    private captchaState: CaptchaState
+    private captchaState: CaptchaState,
+    private challengeService: Challenge
   ) {}
 
   ngOnInit(): void {
@@ -26,6 +28,7 @@ export class Result implements OnInit {
   }
 
   startNewChallenge(): void {
+    this.challengeService.generateRandomChallenges();
     this.captchaState.resetProgress();
     this.captchaState.startNewChallenge();
     this.router.navigate(['/captcha']);

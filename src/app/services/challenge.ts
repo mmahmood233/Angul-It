@@ -20,11 +20,9 @@ export interface ChallengeData {
   providedIn: 'root',
 })
 export class Challenge {
-  private challenges: ChallengeData[] = [
+  private imageSelectionVariants = [
     {
-      stage: 1,
       question: 'Select all images containing ANIMALS',
-      type: 'select-multiple',
       images: [
         { id: '1', emoji: '🐕', label: 'Dog' },
         { id: '2', emoji: '🚗', label: 'Car' },
@@ -39,20 +37,98 @@ export class Challenge {
       correctAnswers: ['1', '3', '5', '7', '9'],
     },
     {
-      stage: 2,
-      question: 'Solve the math problem',
-      type: 'math',
-      mathProblem: 'What is 7 + 5?',
-      correctAnswers: ['12'],
+      question: 'Select all images containing FOOD',
+      images: [
+        { id: '1', emoji: '🍕', label: 'Pizza' },
+        { id: '2', emoji: '⚽', label: 'Ball' },
+        { id: '3', emoji: '🍔', label: 'Burger' },
+        { id: '4', emoji: '💻', label: 'Laptop' },
+        { id: '5', emoji: '🍎', label: 'Apple' },
+        { id: '6', emoji: '🎮', label: 'Game' },
+        { id: '7', emoji: '🍰', label: 'Cake' },
+        { id: '8', emoji: '📚', label: 'Books' },
+        { id: '9', emoji: '🍦', label: 'Ice Cream' },
+      ],
+      correctAnswers: ['1', '3', '5', '7', '9'],
     },
     {
-      stage: 3,
-      question: 'Type the word shown below',
-      type: 'text-input',
-      textPrompt: 'HUMAN',
-      correctAnswers: ['HUMAN', 'human'],
+      question: 'Select all images containing VEHICLES',
+      images: [
+        { id: '1', emoji: '🚗', label: 'Car' },
+        { id: '2', emoji: '🍎', label: 'Apple' },
+        { id: '3', emoji: '✈️', label: 'Plane' },
+        { id: '4', emoji: '🌸', label: 'Flower' },
+        { id: '5', emoji: '🚲', label: 'Bike' },
+        { id: '6', emoji: '📱', label: 'Phone' },
+        { id: '7', emoji: '🚢', label: 'Ship' },
+        { id: '8', emoji: '🎨', label: 'Art' },
+        { id: '9', emoji: '🚁', label: 'Helicopter' },
+      ],
+      correctAnswers: ['1', '3', '5', '7', '9'],
     },
   ];
+
+  private mathProblems = [
+    { problem: 'What is 7 + 5?', answer: '12' },
+    { problem: 'What is 9 - 4?', answer: '5' },
+    { problem: 'What is 6 × 3?', answer: '18' },
+    { problem: 'What is 15 ÷ 3?', answer: '5' },
+    { problem: 'What is 8 + 6?', answer: '14' },
+    { problem: 'What is 20 - 7?', answer: '13' },
+  ];
+
+  private textWords = [
+    { word: 'HUMAN', variants: ['HUMAN', 'human'] },
+    { word: 'ROBOT', variants: ['ROBOT', 'robot'] },
+    { word: 'VERIFY', variants: ['VERIFY', 'verify'] },
+    { word: 'ACCESS', variants: ['ACCESS', 'access'] },
+    { word: 'SECURE', variants: ['SECURE', 'secure'] },
+  ];
+
+  private challenges: ChallengeData[] = [];
+
+  constructor() {
+    this.generateRandomChallenges();
+  }
+
+  private getRandomItem<T>(array: T[]): T {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
+  generateRandomChallenges(): void {
+    // Stage 1: Random image selection
+    const imageVariant = this.getRandomItem(this.imageSelectionVariants);
+    
+    // Stage 2: Random math problem
+    const mathProblem = this.getRandomItem(this.mathProblems);
+    
+    // Stage 3: Random text word
+    const textWord = this.getRandomItem(this.textWords);
+
+    this.challenges = [
+      {
+        stage: 1,
+        question: imageVariant.question,
+        type: 'select-multiple',
+        images: imageVariant.images,
+        correctAnswers: imageVariant.correctAnswers,
+      },
+      {
+        stage: 2,
+        question: 'Solve the math problem',
+        type: 'math',
+        mathProblem: mathProblem.problem,
+        correctAnswers: [mathProblem.answer],
+      },
+      {
+        stage: 3,
+        question: 'Type the word shown below',
+        type: 'text-input',
+        textPrompt: textWord.word,
+        correctAnswers: textWord.variants,
+      },
+    ];
+  }
 
   getChallengeByStage(stage: number): ChallengeData | undefined {
     return this.challenges.find(c => c.stage === stage);
